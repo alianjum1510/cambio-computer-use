@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: react-app
+    ports:
+      - "8080:80"  # Expose React app on port 8080
+    volumes:
+      - .:/app  # Mount your current directory to /app in the container (for development)
+    environment:
+      - NODE_ENV=production
+
+  vnc:
+    image: consol/ubuntu-xfce-vnc  # Example image for VNC container
+    container_name: vnc-server
+    ports:
+      - "5900:5900"  # Expose VNC server
+      - "6080:6080"  # Expose VNC via web (HTML5)
+    environment:
+      - USER=root
+      - PASSWORD=secretpassword
+    volumes:
+      - ./vnc_data:/root
+    restart: unless-stopped
